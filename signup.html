@@ -1,0 +1,232 @@
+ <!-- frontend/signup.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sign Up</title>
+
+<!-- Bootstrap 5 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!-- Bootstrap Icons -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+<style>
+body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(to right, #fbc2eb, #a6c1ee);
+}
+
+.signup-container {
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+    overflow: hidden;
+    max-width: 900px;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    height: 700px;
+}
+
+.signup-left {
+    flex: 1 1 300px;
+    background: url('img/log3.jpg') no-repeat center center;
+    background-size: cover;
+    min-height: 100%;
+}
+
+.signup-right {
+    flex: 1 1 400px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.signup-right img.logo {
+    display: block;
+    margin: 0 auto 20px auto;
+    width: 120px;
+}
+
+.signup-right h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+.input-group-text {
+    background: #fff;
+    border-left: 0;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background: #6a11cb;
+    background: linear-gradient(to right, #6a11cb, #2575fc);
+    border: none;
+    transition: 0.3s;
+}
+
+.btn-primary:hover {
+    opacity: 0.9;
+}
+
+.signup-link {
+    margin-top: 15px;
+    text-align: center;
+}
+
+@media(max-width: 768px){
+    .signup-left { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="signup-container">
+    <!-- Left Image -->
+    <div class="signup-left d-none d-md-block"></div>
+
+    <!-- Right Form -->
+    <div class="signup-right">
+        <img src="img/logo.jpg" alt="Logo" class="logo">
+        <h2>Create Your Account</h2>
+
+        <form id="signupForm">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <input type="text" name="name" class="form-control" placeholder="Full Name" required>
+                </div>
+                <div class="col-md-6">
+                    <input type="email" name="email" class="form-control" placeholder="Email" required>
+                </div>
+                <div class="col-md-6 input-group">
+                    <input type="password" name="password" class="form-control" placeholder="Password" required>
+                    <span class="input-group-text" id="togglePassword"><i class="bi bi-eye-fill"></i></span>
+                </div>
+                <div class="col-md-6 input-group">
+                    <input type="password" name="confirmPassword" class="form-control" placeholder="Confirm Password" required>
+                    <span class="input-group-text" id="toggleConfirmPassword"><i class="bi bi-eye-fill"></i></span>
+                </div>
+                <div class="col-md-6">
+                    <input type="text" name="mobile" class="form-control" placeholder="Mobile Number" required>
+                </div>
+                <div class="col-md-6">
+                    <select name="gender" class="form-select" required>
+                        <option value="">Select Gender</option>
+                        <option>Male</option>
+                        <option>Female</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <input type="date" name="dob" class="form-control" required>
+                </div>
+                <div class="col-md-4">
+    <input type="number" name="icr_breakfast" class="form-control" placeholder="ICR - Breakfast" step="0.01" required>
+</div>
+
+<div class="col-md-4">
+    <input type="number" name="icr_lunch" class="form-control" placeholder="ICR - Lunch" step="0.01" required>
+</div>
+
+<div class="col-md-4">
+    <input type="number" name="icr_dinner" class="form-control" placeholder="ICR - Dinner" step="0.01" required>
+</div>
+
+                <div class="col-md-6">
+                    <input type="number" name="isf" class="form-control" placeholder="ISF" step="0.01" required>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary w-100 mt-3">Sign Up</button>
+        </form>
+
+        <div class="signup-link">
+            <p>Already have an account? <a href="index.html">Login</a></p>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+// Password toggle
+const togglePassword = document.getElementById('togglePassword');
+const password = document.querySelector('input[name="password"]');
+togglePassword.addEventListener('click', () => {
+    const type = password.type === 'password' ? 'text' : 'password';
+    password.type = type;
+    togglePassword.innerHTML = type === 'password' ? '<i class="bi bi-eye-fill"></i>' : '<i class="bi bi-eye-slash-fill"></i>';
+});
+
+const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+const confirmPassword = document.querySelector('input[name="confirmPassword"]');
+toggleConfirmPassword.addEventListener('click', () => {
+    const type = confirmPassword.type === 'password' ? 'text' : 'password';
+    confirmPassword.type = type;
+    toggleConfirmPassword.innerHTML = type === 'password' ? '<i class="bi bi-eye-fill"></i>' : '<i class="bi bi-eye-slash-fill"></i>';
+});
+
+// Form submit with validation + loading
+document.getElementById('signupForm').addEventListener('submit', async function(e){
+    e.preventDefault();
+    const form = this;
+    const passwordVal = form.password.value.trim();
+    const confirmVal = form.confirmPassword.value.trim();
+
+    if(passwordVal !== confirmVal){
+        Swal.fire('Error','Passwords do not match','error');
+        return;
+    }
+
+    Swal.fire({
+        title: 'Processing...',
+        text: 'Please wait while we create your account',
+        allowOutsideClick: false,
+        didOpen: () => { Swal.showLoading(); }
+    });
+
+    try {
+      const res = await fetch("signup.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+        name: form.name.value,
+        email: form.email.value,
+        password: form.password.value,
+        mobile: form.mobile.value,
+        gender: form.gender.value,
+        dob: form.dob.value,
+        icr_breakfast: form.icr_breakfast.value,
+        icr_lunch: form.icr_lunch.value,
+        icr_dinner:form.icr_dinner.value,
+        isf: form.isf.value
+    })
+});
+        const result = await res.json();
+        Swal.close();
+        Swal.fire(result.status === 'success' ? 'Success' : 'Error', result.message, result.status)
+        .then(() => {
+            if(result.status === 'success') window.location.href = 'index.html';
+        });
+    } catch(err){
+        console.error('Fetch signup error:', err);
+        Swal.close();
+        Swal.fire('Error','Server not responding','error');
+    }
+});
+</script>
+
+</body>
+</html>

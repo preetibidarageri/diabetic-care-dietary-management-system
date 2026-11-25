@@ -1,0 +1,190 @@
+<!-- frontend/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login</title>
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- SweetAlert -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- Bootstrap Icons for eye icon -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+<style>
+body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(to right, #fbc2eb, #a6c1ee);
+}
+
+.login-container {
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+    overflow: hidden;
+    max-width: 900px;
+    width: 100%;
+    display: flex;
+    align-content: center;
+}
+
+.login-left {
+    flex: 1;
+    background: url('img/log1.jpg') no-repeat center;
+    background-size: cover;
+    max-width: 450px;
+}
+
+.login-right {
+    flex: 1;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.login-right img.logo {
+    width: 120px;
+   
+   
+    display: block;
+    margin: 0 auto 20px auto; /* top 0, left/right auto, bottom 20px */
+    width: 120px;
+} 
+   
+
+
+.login-right h2 {
+    margin-bottom: 30px;
+    color: #333;
+}
+
+.input-group .form-control {
+    border-radius: 5px 0 0 5px;
+}
+
+.input-group-text {
+    background: #fff;
+    border-left: 0;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background: #6a11cb;
+    background: linear-gradient(to right, #6a11cb, #2575fc);
+    border: none;
+}
+
+.btn-primary:hover {
+    opacity: 0.9;
+}
+
+.signup-link {
+    margin-top: 10px;
+    text-align: center;
+}
+</style>
+</head>
+<body>
+
+<div class="login-container">
+    <!-- Left Image -->
+    <div class="login-left d-none d-md-block"></div>
+
+    <!-- Right Form -->
+    <div class="login-right">
+        <img src="img/logo.jpg" alt="Logo" class="logo">
+        <h2>Login to Your Account</h2>
+
+        <form id="loginForm">
+            <div class="mb-3">
+                <input type="text" class="form-control" id="mobile" placeholder="Mobile Number" required>
+            </div>
+
+            <div class="mb-3 input-group">
+                <input type="password" class="form-control" id="password" placeholder="Password" required>
+                <span class="input-group-text" id="togglePassword"><i class="bi bi-eye-fill"></i></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Login</button>
+        </form>
+
+        <div class="signup-link">
+            <p>Don't have an account? <a href="signup.html">Sign Up</a></p>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// Password toggle
+const togglePassword = document.getElementById('togglePassword');
+const password = document.getElementById('password');
+
+togglePassword.addEventListener('click', () => {
+    const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+    password.setAttribute('type', type);
+    togglePassword.innerHTML = type === 'password' ? '<i class="bi bi-eye-fill"></i>' : '<i class="bi bi-eye-slash-fill"></i>';
+});
+
+// Form submit with validation and loading
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const mobile = document.getElementById('mobile').value.trim();
+    const pwd = password.value.trim();
+
+    if(!mobile || !pwd){
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Please fill all fields',
+            showConfirmButton: true
+        });
+        return;
+    }
+
+    // Show loading SweetAlert
+    Swal.fire({
+        title: 'Validating...',
+        text: 'Please wait while we check your credentials',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading(); // spinner
+        }
+    });
+
+    try {
+   const res = await fetch("login.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ mobile, password: pwd })
+});
+        const result = await res.json();
+
+        Swal.close(); // close loading spinner
+
+        Swal.fire({
+            icon: result.status === 'success' ? 'success' : 'error',
+            title: result.status === 'success' ? 'Success' : 'Error',
+            text: result.message,
+            showConfirmButton: true
+        }).then(() => {
+            if(result.status === 'success'){
+    window.location.href ='home.php';
+}
+        });
+    } catch(err){
+        Swal.close();
+        Swal.fire('Error','Server not responding','error');
+    }
+});
+
+</script>
+
+</body>
+</html>
